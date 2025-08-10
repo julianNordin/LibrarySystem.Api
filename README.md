@@ -25,7 +25,7 @@ Most CRUD tutorials stop at create/read/update/delete. This one adds a genuine r
 
 ## Getting started
 
-**Prerequisites:** [.NET 9 SDK](https://dotnet.microsoft.com/download), a local SQL Server instance — SQL Server LocalDB (ships with Visual Studio) or SQL Server Express both work. Update the `DefaultConnection` string in `appsettings.Development.json` to match whichever you have (this repo defaults to a local SQL Server Express instance, `Server=.\SQLEXPRESS`).
+**Prerequisites:** [.NET 9 SDK](https://dotnet.microsoft.com/download), SQL Server LocalDB (ships with Visual Studio, or install separately).
 
 ```bash
 git clone <this-repo>
