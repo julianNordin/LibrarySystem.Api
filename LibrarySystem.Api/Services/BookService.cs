@@ -30,7 +30,33 @@ public class BookService : IBookService
         return book;
     }
 
-    public Task<bool> UpdateAsync(int id, Book book) => throw new NotImplementedException();
+    public async Task<bool> UpdateAsync(int id, Book book)
+    {
+        var existing = await _context.Books.FirstOrDefaultAsync(b => b.Id == id);
+        if (existing is null)
+        {
+            return false;
+        }
 
-    public Task<bool> DeleteAsync(int id) => throw new NotImplementedException();
+        existing.Title = book.Title;
+        existing.Author = book.Author;
+        existing.Isbn = book.Isbn;
+        existing.PublicationYear = book.PublicationYear;
+
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> DeleteAsync(int id)
+    {
+        var existing = await _context.Books.FirstOrDefaultAsync(b => b.Id == id);
+        if (existing is null)
+        {
+            return false;
+        }
+
+        _context.Books.Remove(existing);
+        await _context.SaveChangesAsync();
+        return true;
+    }
 }
