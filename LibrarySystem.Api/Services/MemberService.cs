@@ -1,5 +1,6 @@
 using LibrarySystem.Api.Data;
 using LibrarySystem.Api.Domain;
+using Microsoft.EntityFrameworkCore;
 
 namespace LibrarySystem.Api.Services;
 
@@ -12,15 +13,50 @@ public class MemberService : IMemberService
         _context = context;
     }
 
-    public Task<IEnumerable<Member>> GetAllAsync() => throw new NotImplementedException();
+    public async Task<IEnumerable<Member>> GetAllAsync()
+    {
+        return await _context.Members.AsNoTracking().ToListAsync();
+    }
 
-    public Task<Member?> GetByIdAsync(int id) => throw new NotImplementedException();
+    public async Task<Member?> GetByIdAsync(int id)
+    {
+        return await _context.Members.AsNoTracking().FirstOrDefaultAsync(m => m.Id == id);
+    }
 
-    public Task<Member> CreateAsync(Member member) => throw new NotImplementedException();
+    public async Task<Member> CreateAsync(Member member)
+    {
+        _context.Members.Add(member);
+        await _context.SaveChangesAsync();
+        return member;
+    }
 
-    public Task<bool> UpdateAsync(int id, Member member) => throw new NotImplementedException();
+    public async Task<bool> UpdateAsync(int id, Member member)
+    {
+        var existing = await _context.Members.FirstOrDefaultAsync(m => m.Id == id);
+        if (existing is null)
+        {
+            return false;
+        }
 
-    public Task<bool> DeleteAsync(int id) => throw new NotImplementedException();
+        existing.FullName = member.FullName;
+        existing.Email = member.Email;
+
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> DeleteAsync(int id)
+    {
+        var existing = await _context.Members.FirstOrDefaultAsync(m => m.Id == id);
+        if (existing is null)
+        {
+            return false;
+        }
+
+        _context.Members.Remove(existing);
+        await _context.SaveChangesAsync();
+        return true;
+    }
 
     public Task<int> GetActiveLoanCountAsync(int memberId) => throw new NotImplementedException();
 }
