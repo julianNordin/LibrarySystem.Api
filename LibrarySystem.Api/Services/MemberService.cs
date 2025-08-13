@@ -58,5 +58,8 @@ public class MemberService : IMemberService
         return true;
     }
 
-    public Task<int> GetActiveLoanCountAsync(int memberId) => throw new NotImplementedException();
+    public async Task<int> GetActiveLoanCountAsync(int memberId)
+    {
+        return await _context.Loans.CountAsync(l => l.MemberId == memberId && l.ReturnedDate == null);
+    }
 }
