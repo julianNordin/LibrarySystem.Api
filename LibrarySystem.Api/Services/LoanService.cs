@@ -83,5 +83,18 @@ public class LoanService : ILoanService
         return loan;
     }
 
-    public Task<Loan> ReturnAsync(int loanId) => throw new NotImplementedException();
+    public async Task<Loan> ReturnAsync(int loanId)
+    {
+        var loan = await _context.Loans.FirstOrDefaultAsync(l => l.Id == loanId)
+            ?? throw new NotFoundException($"Loan {loanId} not found.");
+
+        if (loan.ReturnedDate is not null)
+        {
+            throw new LoanAlreadyReturnedException($"Loan {loanId} was already returned.");
+        }
+
+        loan.ReturnedDate = DateTime.UtcNow;
+        await _context.SaveChangesAsync();
+        return loan;
+    }
 }
