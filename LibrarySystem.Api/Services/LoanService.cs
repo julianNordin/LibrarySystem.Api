@@ -46,7 +46,16 @@ public class LoanService : ILoanService
             .ToListAsync();
     }
 
-    public Task<IEnumerable<Loan>> GetOverdueAsync() => throw new NotImplementedException();
+    public async Task<IEnumerable<Loan>> GetOverdueAsync()
+    {
+        var now = DateTime.UtcNow;
+        return await _context.Loans
+            .Include(l => l.Book)
+            .Include(l => l.Member)
+            .Where(l => l.ReturnedDate == null && l.DueDate < now)
+            .AsNoTracking()
+            .ToListAsync();
+    }
 
     public async Task<Loan> BorrowAsync(int bookId, int memberId)
     {
