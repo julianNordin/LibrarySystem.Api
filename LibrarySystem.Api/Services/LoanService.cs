@@ -8,6 +8,7 @@ namespace LibrarySystem.Api.Services;
 public class LoanService : ILoanService
 {
     private const int LoanPeriodDays = 14;
+    private const int MaxActiveLoansPerMember = 5;
 
     private readonly AppDbContext _context;
     private readonly IMemberService _memberService;
@@ -60,6 +61,13 @@ public class LoanService : ILoanService
         if (bookHasActiveLoan)
         {
             throw new BookNotAvailableException($"Book {bookId} is already on loan.");
+        }
+
+        var activeLoanCount = await _memberService.GetActiveLoanCountAsync(memberId);
+        if (activeLoanCount >= MaxActiveLoansPerMember)
+        {
+            throw new LoanLimitExceededException(
+                $"Member {memberId} already has {MaxActiveLoansPerMember} active loans.");
         }
 
         var loan = new Loan
