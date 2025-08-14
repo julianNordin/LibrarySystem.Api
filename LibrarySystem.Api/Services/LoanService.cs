@@ -55,6 +55,13 @@ public class LoanService : ILoanService
         var member = await _context.Members.FirstOrDefaultAsync(m => m.Id == memberId)
             ?? throw new NotFoundException($"Member {memberId} not found.");
 
+        var bookHasActiveLoan = await _context.Loans
+            .AnyAsync(l => l.BookId == bookId && l.ReturnedDate == null);
+        if (bookHasActiveLoan)
+        {
+            throw new BookNotAvailableException($"Book {bookId} is already on loan.");
+        }
+
         var loan = new Loan
         {
             BookId = book.Id,
