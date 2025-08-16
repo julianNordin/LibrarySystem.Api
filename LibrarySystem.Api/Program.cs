@@ -1,3 +1,5 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using LibrarySystem.Api.Data;
 using LibrarySystem.Api.Services;
 using Microsoft.EntityFrameworkCore;
@@ -16,6 +18,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IMemberService, MemberService>();
 builder.Services.AddScoped<ILoanService, LoanService>();
+
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+builder.Services.AddFluentValidationAutoValidation();
 
 var app = builder.Build();
 
