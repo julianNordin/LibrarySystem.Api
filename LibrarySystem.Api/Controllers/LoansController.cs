@@ -34,6 +34,20 @@ public class LoansController : ControllerBase
         return Ok(loan.ToReadDto());
     }
 
+    [HttpGet("overdue")]
+    public async Task<ActionResult<IEnumerable<LoanReadDto>>> GetOverdue()
+    {
+        var loans = await _loanService.GetOverdueAsync();
+        return Ok(loans.Select(l => l.ToReadDto()));
+    }
+
+    [HttpGet("member/{memberId:int}")]
+    public async Task<ActionResult<IEnumerable<LoanReadDto>>> GetByMember(int memberId)
+    {
+        var loans = await _loanService.GetByMemberAsync(memberId);
+        return Ok(loans.Select(l => l.ToReadDto()));
+    }
+
     [HttpPost("borrow")]
     public async Task<ActionResult<LoanReadDto>> Borrow(BorrowRequestDto dto)
     {
