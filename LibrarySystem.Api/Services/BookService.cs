@@ -1,3 +1,4 @@
+using LibrarySystem.Api.Common;
 using LibrarySystem.Api.Data;
 using LibrarySystem.Api.Domain;
 using Microsoft.EntityFrameworkCore;
@@ -56,7 +57,15 @@ public class BookService : IBookService
         }
 
         _context.Books.Remove(existing);
-        await _context.SaveChangesAsync();
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateException)
+        {
+            throw new DeleteConflictException($"Book {id} cannot be deleted because it has loan history.");
+        }
+
         return true;
     }
 }

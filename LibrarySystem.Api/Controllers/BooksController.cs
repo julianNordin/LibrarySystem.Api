@@ -1,3 +1,4 @@
+using LibrarySystem.Api.Common;
 using LibrarySystem.Api.DTOs;
 using LibrarySystem.Api.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -56,12 +57,19 @@ public class BooksController : ControllerBase
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var success = await _bookService.DeleteAsync(id);
-        if (!success)
+        try
         {
-            return NotFound();
-        }
+            var success = await _bookService.DeleteAsync(id);
+            if (!success)
+            {
+                return NotFound();
+            }
 
-        return NoContent();
+            return NoContent();
+        }
+        catch (DeleteConflictException ex)
+        {
+            return Conflict(ex.Message);
+        }
     }
 }
