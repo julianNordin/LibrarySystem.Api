@@ -41,6 +41,7 @@ public class LoanService : ILoanService
     {
         return await _context.Loans
             .Include(l => l.Book)
+            .Include(l => l.Member)
             .Where(l => l.MemberId == memberId)
             .AsNoTracking()
             .ToListAsync();
