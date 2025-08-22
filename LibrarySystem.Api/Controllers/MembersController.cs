@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LibrarySystem.Api.Controllers;
 
+/// <summary>
+/// CRUD operations for library members.
+/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class MembersController : ControllerBase
@@ -16,6 +19,7 @@ public class MembersController : ControllerBase
         _memberService = memberService;
     }
 
+    /// <summary>Gets every registered member.</summary>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<MemberReadDto>>> GetAll()
     {
@@ -23,6 +27,7 @@ public class MembersController : ControllerBase
         return Ok(members.Select(m => m.ToReadDto()));
     }
 
+    /// <summary>Gets a single member by id.</summary>
     [HttpGet("{id:int}")]
     public async Task<ActionResult<MemberReadDto>> GetById(int id)
     {
@@ -35,6 +40,7 @@ public class MembersController : ControllerBase
         return Ok(member.ToReadDto());
     }
 
+    /// <summary>Registers a new member.</summary>
     [HttpPost]
     public async Task<ActionResult<MemberReadDto>> Create(MemberCreateDto dto)
     {
@@ -42,6 +48,7 @@ public class MembersController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = member.Id }, member.ToReadDto());
     }
 
+    /// <summary>Updates an existing member's details.</summary>
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Update(int id, MemberUpdateDto dto)
     {
@@ -54,6 +61,7 @@ public class MembersController : ControllerBase
         return NoContent();
     }
 
+    /// <summary>Deletes a member. Fails if the member has any loan history.</summary>
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {

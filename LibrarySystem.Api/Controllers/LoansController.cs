@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LibrarySystem.Api.Controllers;
 
+/// <summary>
+/// Borrowing, returning, and querying loans.
+/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class LoansController : ControllerBase
@@ -16,6 +19,7 @@ public class LoansController : ControllerBase
         _loanService = loanService;
     }
 
+    /// <summary>Gets every loan (active and returned).</summary>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<LoanReadDto>>> GetAll()
     {
@@ -23,6 +27,7 @@ public class LoansController : ControllerBase
         return Ok(loans.Select(l => l.ToReadDto()));
     }
 
+    /// <summary>Gets a single loan by id.</summary>
     [HttpGet("{id:int}")]
     public async Task<ActionResult<LoanReadDto>> GetById(int id)
     {
@@ -35,6 +40,7 @@ public class LoansController : ControllerBase
         return Ok(loan.ToReadDto());
     }
 
+    /// <summary>Gets every loan that is past its due date and not yet returned.</summary>
     [HttpGet("overdue")]
     public async Task<ActionResult<IEnumerable<LoanReadDto>>> GetOverdue()
     {
@@ -42,6 +48,7 @@ public class LoansController : ControllerBase
         return Ok(loans.Select(l => l.ToReadDto()));
     }
 
+    /// <summary>Gets every loan (active and returned) for one member.</summary>
     [HttpGet("member/{memberId:int}")]
     public async Task<ActionResult<IEnumerable<LoanReadDto>>> GetByMember(int memberId)
     {
@@ -49,6 +56,10 @@ public class LoansController : ControllerBase
         return Ok(loans.Select(l => l.ToReadDto()));
     }
 
+    /// <summary>
+    /// Borrows a book for a member. Rejected if the book is already on loan or the
+    /// member is at their active-loan cap.
+    /// </summary>
     [HttpPost("borrow")]
     public async Task<ActionResult<LoanReadDto>> Borrow(BorrowRequestDto dto)
     {
@@ -72,6 +83,7 @@ public class LoansController : ControllerBase
         }
     }
 
+    /// <summary>Returns a borrowed book. Rejected if the loan was already returned.</summary>
     [HttpPost("{id:int}/return")]
     public async Task<ActionResult<LoanReadDto>> Return(int id)
     {

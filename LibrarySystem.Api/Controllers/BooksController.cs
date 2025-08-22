@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace LibrarySystem.Api.Controllers;
 
+/// <summary>
+/// CRUD operations for the book catalog.
+/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class BooksController : ControllerBase
@@ -16,6 +19,7 @@ public class BooksController : ControllerBase
         _bookService = bookService;
     }
 
+    /// <summary>Gets every book in the catalog.</summary>
     [HttpGet]
     public async Task<ActionResult<IEnumerable<BookReadDto>>> GetAll()
     {
@@ -23,6 +27,7 @@ public class BooksController : ControllerBase
         return Ok(books.Select(b => b.ToReadDto()));
     }
 
+    /// <summary>Gets a single book by id.</summary>
     [HttpGet("{id:int}")]
     public async Task<ActionResult<BookReadDto>> GetById(int id)
     {
@@ -35,6 +40,7 @@ public class BooksController : ControllerBase
         return Ok(book.ToReadDto());
     }
 
+    /// <summary>Adds a new book to the catalog.</summary>
     [HttpPost]
     public async Task<ActionResult<BookReadDto>> Create(BookCreateDto dto)
     {
@@ -42,6 +48,7 @@ public class BooksController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = book.Id }, book.ToReadDto());
     }
 
+    /// <summary>Updates an existing book's details.</summary>
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Update(int id, BookUpdateDto dto)
     {
@@ -54,6 +61,7 @@ public class BooksController : ControllerBase
         return NoContent();
     }
 
+    /// <summary>Deletes a book. Fails if the book has any loan history.</summary>
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id)
     {
