@@ -1,4 +1,3 @@
-using LibrarySystem.Api.Common;
 using LibrarySystem.Api.DTOs;
 using LibrarySystem.Api.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -77,19 +76,12 @@ public class MembersController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
     public async Task<IActionResult> Delete(int id)
     {
-        try
+        var success = await _memberService.DeleteAsync(id);
+        if (!success)
         {
-            var success = await _memberService.DeleteAsync(id);
-            if (!success)
-            {
-                return NotFound();
-            }
+            return NotFound();
+        }
 
-            return NoContent();
-        }
-        catch (DeleteConflictException ex)
-        {
-            return Conflict(ex.Message);
-        }
+        return NoContent();
     }
 }

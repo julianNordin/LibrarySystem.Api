@@ -1,4 +1,3 @@
-using LibrarySystem.Api.Common;
 using LibrarySystem.Api.DTOs;
 using LibrarySystem.Api.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -73,24 +72,9 @@ public class LoansController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
     public async Task<ActionResult<LoanReadDto>> Borrow(BorrowRequestDto dto)
     {
-        try
-        {
-            var loan = await _loanService.BorrowAsync(dto.BookId, dto.MemberId);
-            var readDto = (await _loanService.GetByIdAsync(loan.Id))!.ToReadDto();
-            return CreatedAtAction(nameof(GetById), new { id = loan.Id }, readDto);
-        }
-        catch (NotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
-        catch (BookNotAvailableException ex)
-        {
-            return Conflict(ex.Message);
-        }
-        catch (LoanLimitExceededException ex)
-        {
-            return Conflict(ex.Message);
-        }
+        var loan = await _loanService.BorrowAsync(dto.BookId, dto.MemberId);
+        var readDto = (await _loanService.GetByIdAsync(loan.Id))!.ToReadDto();
+        return CreatedAtAction(nameof(GetById), new { id = loan.Id }, readDto);
     }
 
     /// <summary>Returns a borrowed book. Rejected if the loan was already returned.</summary>
@@ -100,19 +84,8 @@ public class LoansController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
     public async Task<ActionResult<LoanReadDto>> Return(int id)
     {
-        try
-        {
-            var loan = await _loanService.ReturnAsync(id);
-            var readDto = (await _loanService.GetByIdAsync(loan.Id))!.ToReadDto();
-            return Ok(readDto);
-        }
-        catch (NotFoundException ex)
-        {
-            return NotFound(ex.Message);
-        }
-        catch (LoanAlreadyReturnedException ex)
-        {
-            return Conflict(ex.Message);
-        }
+        var loan = await _loanService.ReturnAsync(id);
+        var readDto = (await _loanService.GetByIdAsync(loan.Id))!.ToReadDto();
+        return Ok(readDto);
     }
 }
