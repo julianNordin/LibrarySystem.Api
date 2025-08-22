@@ -10,6 +10,7 @@ namespace LibrarySystem.Api.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
+[Produces("application/json")]
 public class BooksController : ControllerBase
 {
     private readonly IBookService _bookService;
@@ -21,6 +22,7 @@ public class BooksController : ControllerBase
 
     /// <summary>Gets every book in the catalog.</summary>
     [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<BookReadDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<BookReadDto>>> GetAll()
     {
         var books = await _bookService.GetAllAsync();
@@ -29,6 +31,8 @@ public class BooksController : ControllerBase
 
     /// <summary>Gets a single book by id.</summary>
     [HttpGet("{id:int}")]
+    [ProducesResponseType(typeof(BookReadDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<BookReadDto>> GetById(int id)
     {
         var book = await _bookService.GetByIdAsync(id);
@@ -42,6 +46,8 @@ public class BooksController : ControllerBase
 
     /// <summary>Adds a new book to the catalog.</summary>
     [HttpPost]
+    [ProducesResponseType(typeof(BookReadDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<BookReadDto>> Create(BookCreateDto dto)
     {
         var book = await _bookService.CreateAsync(dto.ToEntity());
@@ -50,6 +56,9 @@ public class BooksController : ControllerBase
 
     /// <summary>Updates an existing book's details.</summary>
     [HttpPut("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Update(int id, BookUpdateDto dto)
     {
         var success = await _bookService.UpdateAsync(id, dto.ToEntity());
@@ -63,6 +72,9 @@ public class BooksController : ControllerBase
 
     /// <summary>Deletes a book. Fails if the book has any loan history.</summary>
     [HttpDelete("{id:int}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
     public async Task<IActionResult> Delete(int id)
     {
         try
