@@ -80,12 +80,13 @@ public class LoanService : ILoanService
                 $"Member {memberId} already has {MaxActiveLoansPerMember} active loans.");
         }
 
+        var borrowedDate = DateTime.UtcNow;
         var loan = new Loan
         {
             BookId = book.Id,
             MemberId = member.Id,
-            BorrowedDate = DateTime.UtcNow,
-            DueDate = DateTime.UtcNow.AddDays(LoanPeriodDays),
+            BorrowedDate = borrowedDate,
+            DueDate = borrowedDate.AddDays(LoanPeriodDays),
         };
 
         _context.Loans.Add(loan);
