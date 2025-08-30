@@ -47,6 +47,7 @@ public class BooksController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(BookReadDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
     public async Task<ActionResult<BookReadDto>> Create(BookCreateDto dto)
     {
         var book = await _bookService.CreateAsync(dto.ToEntity());
@@ -58,6 +59,7 @@ public class BooksController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
     public async Task<IActionResult> Update(int id, BookUpdateDto dto)
     {
         var success = await _bookService.UpdateAsync(id, dto.ToEntity());

@@ -21,6 +21,7 @@ public class GlobalExceptionHandler : IExceptionHandler
             LoanLimitExceededException => (StatusCodes.Status409Conflict, "Loan limit exceeded", exception.Message),
             LoanAlreadyReturnedException => (StatusCodes.Status409Conflict, "Loan already returned", exception.Message),
             DeleteConflictException => (StatusCodes.Status409Conflict, "Delete conflict", exception.Message),
+            DuplicateValueException => (StatusCodes.Status409Conflict, "Duplicate value", exception.Message),
             _ => (StatusCodes.Status500InternalServerError, "An unexpected error occurred", "An unexpected error occurred. Please try again later."),
         };
 

@@ -27,7 +27,15 @@ public class MemberService : IMemberService
     public async Task<Member> CreateAsync(Member member)
     {
         _context.Members.Add(member);
-        await _context.SaveChangesAsync();
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateException)
+        {
+            throw new DuplicateValueException($"A member with email '{member.Email}' already exists.");
+        }
+
         return member;
     }
 
@@ -42,7 +50,15 @@ public class MemberService : IMemberService
         existing.FullName = member.FullName;
         existing.Email = member.Email;
 
-        await _context.SaveChangesAsync();
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateException)
+        {
+            throw new DuplicateValueException($"A member with email '{member.Email}' already exists.");
+        }
+
         return true;
     }
 

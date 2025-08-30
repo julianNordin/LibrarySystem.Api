@@ -47,6 +47,7 @@ public class MembersController : ControllerBase
     [HttpPost]
     [ProducesResponseType(typeof(MemberReadDto), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
     public async Task<ActionResult<MemberReadDto>> Create(MemberCreateDto dto)
     {
         var member = await _memberService.CreateAsync(dto.ToEntity());
@@ -58,6 +59,7 @@ public class MembersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status409Conflict)]
     public async Task<IActionResult> Update(int id, MemberUpdateDto dto)
     {
         var success = await _memberService.UpdateAsync(id, dto.ToEntity());

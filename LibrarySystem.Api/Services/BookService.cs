@@ -27,7 +27,15 @@ public class BookService : IBookService
     public async Task<Book> CreateAsync(Book book)
     {
         _context.Books.Add(book);
-        await _context.SaveChangesAsync();
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateException)
+        {
+            throw new DuplicateValueException($"A book with ISBN '{book.Isbn}' already exists.");
+        }
+
         return book;
     }
 
@@ -44,7 +52,15 @@ public class BookService : IBookService
         existing.Isbn = book.Isbn;
         existing.PublicationYear = book.PublicationYear;
 
-        await _context.SaveChangesAsync();
+        try
+        {
+            await _context.SaveChangesAsync();
+        }
+        catch (DbUpdateException)
+        {
+            throw new DuplicateValueException($"A book with ISBN '{book.Isbn}' already exists.");
+        }
+
         return true;
     }
 
