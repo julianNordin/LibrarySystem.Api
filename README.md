@@ -4,6 +4,11 @@ A small ASP.NET Core Web API for managing a library's book lending — books, me
 
 **Status:** ✅ Feature-complete. See [Roadmap](#roadmap) below.
 
+## Related projects
+
+- [LibrarySystem.Web](https://github.com/julianNordin/LibrarySystem.Web) — the React + TypeScript frontend for this API
+- [librarysystem-azure-deploy](https://github.com/julianNordin/librarysystem-azure-deploy) — this API and its frontend, deployed to Azure with Bicep, Key Vault, and a credential-free CI/CD pipeline
+
 ## Why this project
 
 Most CRUD tutorials stop at create/read/update/delete. This one adds a genuine relationship (a `Loan` links a `Book` and a `Member`) and real business rules that live in a service layer:
@@ -30,7 +35,7 @@ Most CRUD tutorials stop at create/read/update/delete. This one adds a genuine r
 
 ```bash
 git clone <this-repo>
-cd P1  # repo root contains LibrarySystem.sln
+cd LibrarySystem.Api  # repo root contains LibrarySystem.sln
 dotnet build
 dotnet test
 dotnet run --project LibrarySystem.Api
